@@ -36,40 +36,51 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Redirect empty path to dashboard if logged in, else login */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        
-        <Route 
-          path="/login" 
-          element={
-            <GuestRoute>
-              <Login />
-            </GuestRoute>
-          } 
-        />
-        
-        <Route 
-          path="/register" 
-          element={
-            <GuestRoute>
-              <Register />
-            </GuestRoute>
-          } 
-        />
-        
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } 
-        />
+      <div className="flex min-h-screen flex-col">
+        <div className="flex-1">
+          <Routes>
+            {/* Redirect empty path to dashboard if logged in, else login */}
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            
+            <Route 
+              path="/login" 
+              element={
+                <GuestRoute>
+                  <Login />
+                </GuestRoute>
+              } 
+            />
+            
+            <Route 
+              path="/register" 
+              element={
+                <GuestRoute>
+                  <Register />
+                </GuestRoute>
+              } 
+            />
+            
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
 
-        {/* Catch-all route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+            {/* Catch-all route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+        
+        {/* Global Application Footer */}
+        <footer className="py-6 text-center text-sm text-muted-foreground border-t border-border/50 bg-background/80 backdrop-blur-sm relative z-50">
+          <p>
+            Developed with <span className="text-rose-500">♥</span> by <span className="font-semibold text-foreground">Hari Prakash A</span>
+          </p>
+        </footer>
+      </div>
     </BrowserRouter>
   );
 }
