@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: health_postgres
+    environment:
+      POSTGRES_DB: healthdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  ml:
+    build:
+      context: ./ml-service
+    container_name: health_ml
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./health-monitoring-backend/health-monitoring-backend
+    container_name: health_backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/healthdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+      - ML_SERVICE_URL=http://ml:8000/predict
+      - JWT_SECRET=a3f9c8d7b6e5f4a3b2c1d0e9f8g7h6i5j4k3l2m1n0o9p8q7r6s5t4u3v2w1x0y9z
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ml:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/auth/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./health-monitoring-frontend
+      args:
+        - VITE_API_BASE_URL=http://localhost:8080/api
+    container_name: health_frontend
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8080/api
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: unless-stopped
