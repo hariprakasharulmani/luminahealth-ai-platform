@@ -79,13 +79,8 @@ private final CustomUserDetailsService userDetailsService;
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Allow Localhost and Vercel Production URL
-        configuration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:5173", 
-                "http://localhost:5174", 
-                "http://localhost:3000",
-                "https://luminahealth.vercel.app"
-        ));
+        // Allow all Origin patterns to support any PaaS frontend domain gracefully
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With"));
         configuration.setAllowCredentials(true);
