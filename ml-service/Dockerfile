@@ -13,5 +13,5 @@ COPY . .
 # Expose FastAPI port
 EXPOSE 8000
 
-# Run Uvicorn server
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run Uvicorn server using shell form to allow Railway's environment variable evaluation
+CMD uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}
