@@ -5,8 +5,13 @@ WORKDIR /app
 # Copy pom.xml and source code
 COPY pom.xml .
 COPY src ./src
+COPY mvnw .
+COPY .mvn .mvn
 
-# Package the application (skip tests for faster builds)
+# Ensure maven wrapper has execute permissions (just in case)
+RUN chmod +x ./mvnw
+
+# Package the application using native maven (skip tests for faster builds)
 RUN mvn clean package -DskipTests
 
 # Stage 2: Create the runtime image
