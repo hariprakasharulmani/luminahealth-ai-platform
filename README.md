@@ -15,9 +15,7 @@
 
 > 🚀 **Note:** This is a comprehensive portfolio project demonstrating full-stack engineering, microservices architecture, machine learning integration, Docker containerization, and cloud deployment.
 
-## 🌟 Live Demonstration
-The platform is deployed live as a unified architecture on Railway.
-- **Live Demo Site:** [https://luminahealth.up.railway.app](https://luminahealth.up.railway.app)
+
 
 ---
 
